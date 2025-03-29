@@ -1,25 +1,66 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Space_Grotesk } from "next/font/google";
+import axios from "axios";
 
 const space = Space_Grotesk({ subsets: ["latin"] });
 
 function Page() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Fix for mobile browser vh issues
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  const onLogout: React.MouseEventHandler = async () => {
+    try {
+      await axios.get("http://localhost:3000/api/users/logout");
+      router.push("/login");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
+  const goToAddFriend: React.MouseEventHandler = () => {
+    router.push("/chat/addfriend");
+  };
+
+  const goToRequests: React.MouseEventHandler = () => {
+    router.push("/chat/requests");
+  };
+
   return (
-    <div className={`${space.className} flex h-screen bg-black`}>
+    <div
+      className={`${space.className} flex w-full overflow-hidden h-screen bg-black`}
+    >
       {/* Left Sidebar with Gradient Border on the Right */}
-      <div className="relative w-[30%] h-[100vh]">
+      <div className="relative w-[30%] h-[100%]">
         {/* Gradient Border (Right Side) */}
         <div className="absolute top-0 right-0 w-[3px] h-full bg-gradient-to-b from-pink-500 via-red-500 to-yellow-500"></div>
 
         {/* Sidebar Content */}
-        <div className="h-full bg-black p-4">
+        <div className=" bg-black p-4">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl text-white">Chat App</h1>
-            <h2 className="text-lg text-white pr-6 hover:cursor-pointer">
+            <button
+              className="text-md text-white bg-blue-400 py-2 px-4 rounded-2xl  hover:bg-blue-600"
+              onClick={onLogout}
+            >
               Logout
-            </h2>
+            </button>
+            <button
+              className="text-md text-white bg-blue-400 flex-wrap py-2 px-4 rounded-2xl hover:bg-blue-600 flex items-center justify-center"
+              onClick={goToAddFriend}
+            >
+              Add
+            </button>
           </div>
           <input
             type="text"

@@ -1,12 +1,49 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Space_Grotesk } from "next/font/google";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const space = Space_Grotesk({ subsets: ["latin"] });
+
 function Login() {
   const router = useRouter();
+
+  const [data, setData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  const onSignUp = async () => {
+    if (data.password !== data.confirmPassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+    setPasswordError(null);
+
+    // Remove confirmPassword before sending request
+    const { confirmPassword, ...userData } = data;
+
+    try {
+      await axios.post("http://localhost:3000/api/users/signup", userData);
+      console.log("User signed up successfully", userData);
+      router.push("/login");
+    } catch (error) {
+      console.error("Error signing up:", error);
+    }
+  };
 
   return (
     <div
@@ -17,22 +54,38 @@ function Login() {
           <h1 className="text-3xl font-bold justify-start mb-6">Chat App</h1>
           <h1 className="mb-4 text-lg font-bold">Sign Up</h1>
           <input
-            className="w-full p-2  border border-gray-400 rounded-md"
+            className="w-full p-2 border border-gray-400 rounded-md"
             placeholder="Enter your username"
+            onChange={(e) => setData({ ...data, username: e.target.value })}
           />
           <input
             className="w-full p-2 m-2 border border-gray-400 rounded-md"
             placeholder="Enter your email"
+            onChange={(e) => setData({ ...data, email: e.target.value })}
           />
           <input
             className="w-full p-2 border border-gray-400 rounded-md"
             placeholder="Enter your password"
+            type="password"
+            onChange={(e) => setData({ ...data, password: e.target.value })}
           />
-          <button className="w-full p-2 mt-4 bg-blue-500 text-white rounded-md hover:cursor-pointer">
+          <input
+            className="w-full p-2 mt-2 border border-gray-400 rounded-md"
+            placeholder="Confirm password"
+            type="password"
+            onChange={(e) =>
+              setData({ ...data, confirmPassword: e.target.value })
+            }
+          />
+          {passwordError && <p className="text-red-500">{passwordError}</p>}
+          <button
+            className="w-full p-2 mt-4 bg-blue-500 text-white rounded-md hover:cursor-pointer"
+            onClick={onSignUp}
+          >
             Sign Up
           </button>
           <span className="mt-4">
-            Already have an account ?{" "}
+            Already have an account?{" "}
             <span
               className="text-blue-500 hover:cursor-pointer"
               onClick={() => router.push("/login")}
