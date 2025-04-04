@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     const findUser = await User.findOne({ email }).select("+password");
 
     if (!findUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     const isPasswordValid = await bcrypt.compare(password, findUser.password);
@@ -42,12 +42,13 @@ export async function POST(request: NextRequest) {
     };
 
     const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
-      expiresIn: "1d",
+      expiresIn: "10d",
     });
 
     const response = NextResponse.json({
       message: "Login successful",
       success: true,
+      token: token,
     });
 
     response.cookies.set("token", token, { httpOnly: true });

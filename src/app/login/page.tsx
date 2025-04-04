@@ -15,6 +15,8 @@ function Login() {
     password: "",
   });
 
+  const [status, setStatus] = useState<number | null>(null);
+
   useEffect(() => {
     // Fix for mobile browser vh issues
     document.body.style.overflow = "hidden";
@@ -27,10 +29,15 @@ function Login() {
   const onLogin = async () => {
     const { email, password } = data;
     try {
-      await axios.post("http://localhost:3000/api/users/login", data, {
-        withCredentials: true,
-      });
-
+      const response = await axios.post(
+        "http://localhost:3000/api/users/login",
+        data,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Login Success:", response.status, response.data);
+      setStatus(response.status);
       router.push("/chat");
     } catch (error) {
       console.error("Error logging in:", error);
@@ -57,6 +64,14 @@ function Login() {
             placeholder="Enter your password"
             onChange={(e) => setData({ ...data, password: e.target.value })}
           />
+          {status === 404 && <p className="text-red-500">User not found</p>}
+          {status === 401 && (
+            <p className="text-red-500">Invalid credentials</p>
+          )}
+          {status === 200 && (
+            <p className="text-green-500">Login successful!</p>
+          )}
+
           <button
             className="w-full p-2 mt-4 bg-blue-500 text-white rounded-md hover:cursor-pointer"
             onClick={onLogin}
@@ -64,7 +79,7 @@ function Login() {
             Login
           </button>
           <span className="mt-4">
-            Already have an account?{" "}
+            Don't have an account?{" "}
             <span
               className="text-blue-500 hover:cursor-pointer"
               onClick={() => router.push("/signup")}
