@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/user.models";
-import jwt, { JwtPayload } from "jsonwebtoken";
 import { connectDB } from "@/db/dbConfig";
 
 connectDB();
-
-interface DecodedToken extends JwtPayload {
-  _id: string;
-}
 
 interface userDetails {
   username: string;
