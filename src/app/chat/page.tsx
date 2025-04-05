@@ -31,7 +31,7 @@ function Page() {
   useEffect(() => {
     const fetchUserAndInitSocket = async () => {
       try {
-        const token = await axios.get("http://localhost:3000/api/users/token", {
+        const token = await axios.get("/api/users/token", {
           withCredentials: true,
         });
 
@@ -71,9 +71,7 @@ function Page() {
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3000/api/users/friends"
-        );
+        const response = await axios.get("/api/users/friends");
         setFriends(response.data.friends);
       } catch (error) {
         console.error("Error fetching friends:", error);
@@ -85,7 +83,7 @@ function Page() {
 
   const onLogout = async () => {
     try {
-      await axios.get("http://localhost:3000/api/users/logout");
+      await axios.get("/api/users/logout");
       router.push("/login");
     } catch (error) {
       console.error("Error logging out:", error);
@@ -104,9 +102,7 @@ function Page() {
     );
 
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/users/messages/${friendId}`
-      );
+      const response = await axios.get(`/api/users/messages/${friendId}`);
       setMessages(
         Array.isArray(response.data.messages) ? response.data.messages : []
       );
@@ -126,10 +122,9 @@ function Page() {
     };
 
     try {
-      await axios.post(
-        `http://localhost:3000/api/users/sendMessages/${selectedFriendId}`,
-        { message }
-      );
+      await axios.post(`/api/users/sendMessages/${selectedFriendId}`, {
+        message,
+      });
 
       if (socket) {
         socket.emit("send-message", data); // Send full data object

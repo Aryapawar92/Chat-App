@@ -36,7 +36,7 @@ function Login() {
     // Remove confirmPassword before sending request
 
     try {
-      await axios.post("http://localhost:3000/api/users/signup", {
+      await axios.post("/api/users/signup", {
         username: data.username,
         email: data.email,
         password: data.password,
