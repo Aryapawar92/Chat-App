@@ -34,7 +34,7 @@ function Login() {
     setPasswordError(null);
 
     // Remove confirmPassword before sending request
-    const { confirmPassword: _, ...userData } = data;
+    const { confirmPassword: unused, ...userData } = data;
 
     try {
       await axios.post("http://localhost:3000/api/users/signup", userData);

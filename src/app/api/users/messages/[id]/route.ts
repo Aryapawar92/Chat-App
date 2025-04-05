@@ -37,6 +37,7 @@ export async function GET(request: NextRequest) {
         process.env.TOKEN_SECRET!
       ) as DecodedToken;
     } catch (error) {
+      console.error("Error verifying token:", error);
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
