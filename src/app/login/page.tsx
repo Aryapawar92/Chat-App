@@ -27,7 +27,6 @@ function Login() {
   }, []);
 
   const onLogin = async () => {
-    const { email, password } = data;
     try {
       const response = await axios.post(
         "http://localhost:3000/api/users/login",
@@ -36,7 +35,6 @@ function Login() {
           withCredentials: true,
         }
       );
-      console.log("Login Success:", response.status, response.data);
       setStatus(response.status);
       router.push("/chat");
     } catch (error) {
@@ -79,7 +77,7 @@ function Login() {
             Login
           </button>
           <span className="mt-4">
-            Don't have an account?{" "}
+            Don&pos;t have an account?{" "}
             <span
               className="text-blue-500 hover:cursor-pointer"
               onClick={() => router.push("/signup")}
