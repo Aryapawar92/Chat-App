@@ -34,11 +34,14 @@ function Login() {
     setPasswordError(null);
 
     // Remove confirmPassword before sending request
-    const { confirmPassword: unused, ...userData } = data;
 
     try {
-      await axios.post("http://localhost:3000/api/users/signup", userData);
-      console.log("User signed up successfully", userData);
+      await axios.post("http://localhost:3000/api/users/signup", {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      });
+
       router.push("/login");
     } catch (error) {
       console.error("Error signing up:", error);
